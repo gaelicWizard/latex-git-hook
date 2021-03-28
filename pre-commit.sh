@@ -14,9 +14,9 @@
 # - Make latexmk work with documents in subdirectories: http://tex.stackexchange.com/a/11726
 #
 
-find . -name '*.pdf' | sed 's/\(.*\)\..*/\1/' | while read doc; do
+git diff-index --cached --name-only HEAD | grep 'tex$' | sed 's/\(.*\)\..*/\1/' | while read doc; do
   if [ -f $doc.tex ]; then
-    printf "Checking LaTeX document '$doc.pdf'... "
+    printf "Checking LaTeX document '$doc.tex'... "
     latexmk -e '$pdflatex = $latex = '"'"'internal die_latex %S'"'"'; sub die_latex { die "$_[0] outdated" }' -pdf -jobname=$doc $doc >/dev/null 2>/dev/null
     rc=$?
     if [ $rc != 0 ]; then
